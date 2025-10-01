@@ -602,3 +602,27 @@ def webhook_listener(request):
             return JsonResponse({"error": str(e)}, status=400)
 
     return JsonResponse({"message": "GET not allowed"}, status=405)#
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+@csrf_exempt  # عشان GitHub يقدر يبعت POST من غير CSRF token
+def github_webhook(request):
+    if request.method == "POST":
+        try:
+            payload = json.loads(request.body)
+            # نطبع أو نخزن الداتا اللي جت
+            print("📩 Webhook Received:", payload)
+
+            # مثلًا: نجيب رسالة الكوميت
+            commit_message = payload.get("head_commit", {}).get("message", "No message")
+            print("✅ Commit Message:", commit_message)
+
+            return JsonResponse({"status": "ok", "commit_message": commit_message})
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+    else:
+        return JsonResponse({"error": "Invalid method"}, status=405)
+
