@@ -582,3 +582,23 @@ class Cookie(APIView):
             'age': age
         })
 
+
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+@csrf_exempt
+def webhook_listener(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body.decode("utf-8"))
+            event_type = data.get("event")
+
+            # هنا تقدر تعمل أي لوجيك أنت محتاجه حسب نوع الحدث
+            return JsonResponse({"status": "success", "event": event_type}, status=200)
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+    return JsonResponse({"message": "GET not allowed"}, status=405)

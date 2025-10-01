@@ -105,6 +105,6 @@ urlpatterns = [
     # path('students/<int:id>/',Student_view.as_view(),name='one_student'),
     # path('students1/',include(router.urls)),
     # path('user/',include(router1.urls)),
-    
-    
+    path("webhook/", webhook_listener, name="webhook"),
+
 ]
