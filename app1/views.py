@@ -584,24 +584,24 @@ class Cookie(APIView):
 
 
 
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-import json
+# from django.http import JsonResponse
+# from django.views.decorators.csrf import csrf_exempt
+# import json
 
-@csrf_exempt
-def webhook_listener(request):
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body.decode("utf-8"))
-            event_type = data.get("event")
+# @csrf_exempt
+# def webhook_listener(request):
+#     if request.method == "POST":
+#         try:
+#             data = json.loads(request.body.decode("utf-8"))
+#             event_type = data.get("event")
 
-            # هنا تقدر تعمل أي لوجيك أنت محتاجه حسب نوع الحدث
-            return JsonResponse({"status": "success", "event": event_type}, status=200)
+#             # هنا تقدر تعمل أي لوجيك أنت محتاجه حسب نوع الحدث
+#             return JsonResponse({"status": "success", "event": event_type}, status=200)
 
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=400)
+#         except Exception as e:
+#             return JsonResponse({"error": str(e)}, status=400)
 
-    return JsonResponse({"message": "GET not allowed"}, status=405)#
+#     return JsonResponse({"message": "GET not allowed"}, status=405)#
 
 
 from django.http import JsonResponse
@@ -631,6 +631,6 @@ def github_webhook(request):
         payload = json.loads(request.body.decode("utf-8"))
         print("📩 GitHub Payload:")
         print(json.dumps(payload, indent=2))  # يطبع بشكل مرتب
-        return JsonResponse({"status": "ok", "commit_message": payload.get("head_commit", {}).get("message", "No message")})
+        return JsonResponse({"status": "ok", "commit_message": payload.get("head_commit", {}).get("message", "No mess000age")})
     return JsonResponse({"error": "GET not allowed"}, status=405)
 
