@@ -608,21 +608,29 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-@csrf_exempt  # عشان GitHub يقدر يبعت POST من غير CSRF token
+# @csrf_exempt  # عشان GitHub يقدر يبعت POST من غير CSRF token
+# def github_webhook(request):
+#     if request.method == "POST":
+#         try:
+#             payload = json.loads(request.body)
+#             # نطبع أو نخزن الداتا اللي جت
+#             print("📩 Webhook Received:", payload)
+
+#             # مثلًا: نجيب رسالة الكوميت
+#             commit_message = payload.get("head_commit", {}).get("message", "No message")
+#             print("✅ Commit Message:", commit_message)
+
+#             return JsonResponse({"status": "ok", "commit_message": commit_message})
+#         except Exception as e:
+#             return JsonResponse({"error": str(e)}, status=400)
+#     else:
+#         return JsonResponse({"error": "Invalid method"}, status=405)
+@csrf_exempt
 def github_webhook(request):
     if request.method == "POST":
-        try:
-            payload = json.loads(request.body)
-            # نطبع أو نخزن الداتا اللي جت
-            print("📩 Webhook Received:", payload)
-
-            # مثلًا: نجيب رسالة الكوميت
-            commit_message = payload.get("head_commit", {}).get("message", "No message")
-            print("✅ Commit Message:", commit_message)
-
-            return JsonResponse({"status": "ok", "commit_message": commit_message})
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=400)
-    else:
-        return JsonResponse({"error": "Invalid method"}, status=405)
+        payload = json.loads(request.body.decode("utf-8"))
+        print("📩 GitHub Payload:")
+        print(json.dumps(payload, indent=2))  # يطبع بشكل مرتب
+        return JsonResponse({"status": "ok", "commit_message": payload.get("head_commit", {}).get("message", "No message")})
+    return JsonResponse({"error": "GET not allowed"}, status=405)
 
